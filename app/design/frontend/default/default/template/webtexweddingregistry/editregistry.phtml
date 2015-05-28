@@ -1,0 +1,242 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+?>
+
+<div class="page-title">
+    <h1><?php echo $this->__('Registry Information') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form action="<?php echo $this->getSaveUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data">
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Registry') ?></h2>
+    <ul class="form-list">
+        <li>
+            <div>
+            <label><?php echo $this->__('Registry ID') ?></label><br />
+            <?php echo $this->getRegistryData()->getWeddingregistryId()?>
+            </div>
+        </li>
+        <li>
+            <div>
+            <label><?php echo $this->__('Direct link to your registry') ?></label><br />
+            <a href="<?php echo $this->getUrl('*/*/registry', array('id' => $this->getRegistryData()->getWeddingregistryId()));?>"><?php echo $this->getUrl('*/*/registry', array('id' => $this->getRegistryData()->getWeddingregistryId()));?></a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Registrant') ?></h2>
+    <ul class="form-list">
+        <li class="fields">
+            <div class="field name-firstname">
+                <label for="firstname" class="required"><?php echo $this->__('First Name') ?> <em>*</em></label><br />
+                <input type="text" id="firstname" name="firstname" value="<?php echo $this->getRegistryData()->getFirstname()?>" title="<?php echo $this->__('First Name') ?>" class="required-entry input-text"/>
+            </div>
+
+            <div class="field name-lastname">
+                <label for="lastname" class="required"><?php echo $this->__('Last Name') ?> <em>*</em></label><br />
+                <input type="text" id="lastname" name="lastname" value="<?php echo $this->getRegistryData()->getLastname()?>" title="<?php echo $this->__('Last Name') ?>" class="required-entry input-text" />
+            </div>    
+        </li>
+        <li>
+            <div class="field name-lastname">
+                <label for="maidenname"><?php echo $this->__('Maiden Name (if applicable)') ?></label><br />
+                <input type="text" id="maidenname" name="maidenname" value="<?php echo $this->getRegistryData()->getMaidenname()?>" title="<?php echo $this->__('Maiden Name') ?>" class="input-text" />
+            </div>
+        </li>
+        <li>
+            <div class="field">
+            <label for="email" class="required"><?php echo $this->__('Email Address') ?> <em>*</em></label><br />
+            <input type="text" name="email" id="email" value="<?php echo $this->getRegistryData()->getEmail()?>" title="<?php echo $this->__('Email Address') ?>" class="required-entry validate-email input-text" />
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Co-Registrant') ?></h2>
+    <ul class="form-list">
+        <li>
+            <div class="field name-firstname">
+                <label for="co_firstname"><?php echo $this->__('First Name') ?></label><br />
+                <input type="text" id="co_firstname" name="co_firstname" value="<?php echo $this->getRegistryData()->getCoFirstname()?>" title="<?php echo $this->__('First Name') ?>" class="input-text"/>
+            </div>
+
+            <div class="field name-lastname">
+                <label for="co_lastname"><?php echo $this->__('Last Name') ?></label><br />
+                <input type="text" id="co_lastname" name="co_lastname" value="<?php echo $this->getRegistryData()->getCoLastname()?>" title="<?php echo $this->__('Last Name') ?>" class="input-text" />
+            </div>    
+        </li>
+        <li>
+            <div class="field name-lastname">
+                <label for="co_maidenname"><?php echo $this->__('Maiden Name (if applicable)') ?></label><br />
+                <input type="text" id="co_maidenname" name="co_maidenname" value="<?php echo $this->getRegistryData()->getCoMaidenname()?>" title="<?php echo $this->__('Maiden Name') ?>" class="input-text" />
+            </div>
+        </li>
+        <li>
+            <div class="field">
+            <label for="co_email"><?php echo $this->__('Email Address') ?></label><br />
+            <input type="text" name="co_email" id="co_email" value="<?php echo $this->getRegistryData()->getCoEmail()?>" title="<?php echo $this->__('Email Address') ?>" class="validate-email input-text" />
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Wedding') ?></h2>
+    <ul class="form-list">
+        <li>
+            <label for="wedding_exp_arriv_date" class="required"><?php echo $this->__('Wedding Date') ?> <em>*</em></label><br />
+            <div class="field">
+                <input type="text" id="wedding_exp_arriv_date" name="wedding_exp_arriv_date" value="<?php echo $this->getRegistryData()->getWeddingExpArrivDate()?>" title="<?php echo $this->__('Wedding Date') ?>" class="required-entry validate-date input-text"/>
+            </div>
+            <img src="<?php echo Mage::getDesign()->getSkinUrl('images/grid-cal.gif'); ?>" alt="" class="v-middle" id="wedding_exp_arriv_date_button" title="<?php echo $this->__('Date selector') ?>"/>
+            <script type="text/javascript">
+                Calendar.setup({
+                    inputField : "wedding_exp_arriv_date",
+                    ifFormat : "%m/%d/%y",
+                    button : "wedding_exp_arriv_date_button",
+                    align : "Bl",
+                    singleClick : true
+                });
+            </script>
+        </li>
+        <li> 
+            <label for="event_location"><?php echo $this->__('Wedding Location') ?></label><br />
+            <div class="field">
+                <input type="text" id="event_location" name="event_location" value="<?php echo $this->getRegistryData()->getEventLocation()?>" title="<?php echo $this->__('Wedding Location') ?>" class="input-text"/>
+            </div>
+        </li>
+        <li>
+            <label for="parent_notes"><?php echo $this->__('Message for Registry Guests') ?></label><br />
+            <textarea rows="4" wrap="on" name="parent_notes" class="input-text" id="parent_notes" style="width: 525px;"><?php echo $this->getRegistryData()->getParentNotes()?></textarea>
+        </li>
+    </ul>
+</div>
+
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Shipping Address'); ?></h2>
+    <ul class="form-list">
+        <li class="fields wide">
+            <?php if($this->getAddressesHtmlSelect()):
+             echo $this->__('Please choose a shipping address for your gifts from your address book:'); ?>
+            <br />
+            <?php echo $this->getAddressesHtmlSelect() ?>
+            <br/><br/>
+            <input type="checkbox" class="specify-address">&nbspI want to specify a shipping address for the gifts (it will be added to you address book as well).
+            <?php else: ?>
+            <?php echo $this->__('To choose a shipping address for your gifts, please add an address to your address book first.'); ?>
+            <br/><br/>
+            <input type="checkbox" class="specify-address">&nbspI want to specify a shipping address for the gifts (it will be added to you address book as well).
+            <?php endif; ?>
+
+            <script type="text/javascript">
+                $$(".specify-address")[0].observe('click', function(){
+                    $$(".specify-address")[0].checked ? showAddressFields() : hideAddressFields();
+                });
+                function showAddressFields()
+                {
+                    if($$(".address-select")[0] != undefined){
+                        $$(".address-select")[0].disable();
+                    }
+                    var reloadurl = '<?php echo $this->getUrl('webtexweddingregistry/index/getaddressfields') ?>';
+                    new Ajax.Request(reloadurl, {
+                        method: 'get',
+                        onComplete: function(transport) {
+                            $$(".output-address-form")[0].innerHTML = transport.responseText;
+                            new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+                        }
+                    });
+                }
+
+                function hideAddressFields()
+                {
+                    $$(".output-address-form")[0].innerHTML = "";
+                    if($$(".address-select")[0] != undefined){
+                        $$(".address-select")[0].enable();
+                    }
+
+                }
+
+            </script>
+
+        </li>
+        <li><div class="output-address-form"></div></li>
+    </ul>
+</div>
+
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Add a Photo') ?></h2>
+    <ul class="form-list">
+        <li> 
+            <div class="field">
+                <input id="filename" name="filename" value="<?php echo $this->getRegistryData()->getFilename()?>" type="file" />
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Registry Status') ?></h2>
+    <ul class="form-list">
+        <li class="control"> 
+            <input type="radio" id="publ_registry" name="status" value="0"<?php if(!$this->getRegistryData()->getStatus()) echo ' checked="checked"' ?>/> <label for="publ_registry"><?php echo $this->__('Public Registry (available to everyone through registry search, and direct access using direct link)') ?></label><br />
+        </li>
+        <li class="control">
+            <input type="radio" id="priv_registry" name="status" value="1"<?php if($this->getRegistryData()->getStatus()) echo ' checked="checked"' ?>/> <label for="priv_registry"><?php echo $this->__('Private Registry (available only to those, who have your unique ID or direct link to your Wedding Registry)') ?></label>
+        </li>
+    </ul>
+</div>
+
+<div class="buttons-set cart-table">
+    <a href="<?php echo $this->getBackUrl() ?>" class="left">&laquo; <?php echo $this->__('Back') ?></a>
+    
+    <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+    
+    <button type="submit" class="button"><span><?php echo $this->__('Save Changes') ?></span></button>
+    <button type="button" onclick="return confirmRemoveRegistry();" class="button btn-continue"><span><?php echo $this->__('Delete Registry') ?></span></button>
+    <button type="button" onclick="setLocation('<?php echo $this->getCancelUrl() ?>')" class="button btn-continue"><span><?php echo $this->__('Cancel') ?></span></button>
+</div>
+</form>
+<script type="text/javascript">
+    var dataForm = new VarienForm('form-validate', true);
+</script>
+<script type="text/javascript">
+//<![CDATA[
+function confirmRemoveRegistry() {
+    if(confirm('<?php echo $this->__('All registry information will be completely erased. Are you sure you want to delete your registry?') ?>'))
+    {
+        setLocation('<?php echo $this->getDeleteRegistryUrl() ?>');
+    }
+}
+//]]>
+</script>
+

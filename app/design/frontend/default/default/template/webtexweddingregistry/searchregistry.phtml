@@ -1,0 +1,115 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+?>
+
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<div class="page-title">
+    <h1><?php echo $this->__('Wedding Registry Search') ?></h1>
+</div>
+
+<form action="<?php echo $this->getSearchUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data">
+<div class="fieldset">
+    <ul class="form-list">
+        <li class="fields" style="overflow: hidden;">
+            <div class="field name-firstname">
+                <label for="firstname"><?php echo $this->__('First Name') ?></label><br />
+                <input type="text" id="firstname" name="firstname" value="<?php echo $this->getSearchFirstName(); ?>" title="<?php echo $this->__('First Name') ?>" class="input-text"/>
+            </div>
+
+            <div class="field name-lastname">
+                <label for="lastname" class="required"><?php echo $this->__('Last Name') ?> <em>*</em></label><br />
+                <input type="text" id="lastname" name="lastname" value="<?php echo $this->getSearchLastName(); ?>" title="<?php echo $this->__('Last Name') ?>" class="required-entry input-text" />
+            </div>
+            
+            <div class="buttons-set">
+                <button type="submit" class="button"><span><?php echo $this->__('Search') ?></span></button>
+            </div>    
+        </li>
+    </ul>
+</div>
+</form>
+<form action="<?php echo $this->getSearchUrl() ?>" method="post" id="form-validate2" enctype="multipart/form-data">
+<div class="fieldset">
+    <ul class="form-list">
+        <li class="fields" style="overflow: hidden;">
+            <div class="field name-firstname">
+                <label for="registry_id" class="required"><?php echo $this->__('Registry Id') ?> <em>*</em></label><br />
+                <input type="text" id="registry_id" name="registry_id" value="<?php echo $this->getSearchRegistryId(); ?>" title="<?php echo $this->__('Registry Id') ?>" class="required-entry input-text"/>
+            </div>
+            
+            <div class="buttons-set">
+                <button type="submit" class="button"><span><?php echo $this->__('Search') ?></span></button>
+            </div>    
+        </li>
+    </ul>
+</div>
+</form>
+<script type="text/javascript">
+    var dataForm = new VarienForm('form-validate', true);
+    var dataForm2 = new VarienForm('form-validate2', true);
+</script>
+
+<h4><?php echo $this->getResultTitle();?></h4>
+<div class="my-wishlist">
+<?php if($this->getResultsCount()): ?>
+    <table cellspacing="0" width="100%" class="data-table box-table" id="wishlist-table">
+    <col width="350" />
+    <col />
+    <col width="100"/>
+        <thead>
+            <tr>
+                <th><?php echo $this->__('Registry Name') ?></th>
+                <th><?php echo $this->__('Location') ?></th>
+                <th><?php echo $this->__('Wedding Date') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach($this->getResults() as $row): ?>
+            <tr>
+                <td>
+                    <?php echo $this->getRegistryName($row); ?>
+                </td>
+                <td align="center">
+                    <?php echo $row->getEventLocation(); ?>
+                </td>
+                <td align="center">
+                    <?php echo $row->getWeddingExpArrivDate(); ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<script type="text/javascript">decorateTable('wishlist-table')</script>
+
+<?php else: ?>
+    <?php if($this->isRequest()): ?>
+        <p><?php echo $this->__('No registries found.') ?></p>
+    <?php endif; ?>
+<?php endif ?>
+</div>

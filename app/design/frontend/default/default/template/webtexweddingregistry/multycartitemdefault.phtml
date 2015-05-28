@@ -1,0 +1,61 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_GiftRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+?>
+<h2 class="product-name">
+    <?php if ($this->hasProductUrl()):?>
+        <a href="<?php echo $this->getProductUrl() ?>"><?php echo $this->htmlEscape($this->getProductName()) ?></a>
+    <?php else: ?>
+        <?php echo $this->htmlEscape($this->getProductName()) ?>
+    <?php endif; ?>
+</h2>
+<div style="margin-top: 10px;"><?php echo $this->getRegistryTitle(); ?></div>
+<?php if ($_options = $this->getOptionList()):?>
+    <dl class="item-options">
+        <?php foreach ($_options as $_option) : ?>
+        <?php $_formatedOptionValue = $this->getFormatedOptionValue($_option) ?>
+        <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+        <dd<?php if (isset($_formatedOptionValue['full_view'])): ?> class="truncated"<?php endif; ?>><?php echo $_formatedOptionValue['value'] ?>
+            <?php if (isset($_formatedOptionValue['full_view'])): ?>
+            <div class="truncated_full_value">
+                <dl class="item-options">
+                    <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+                    <dd><?php echo $_formatedOptionValue['full_view'] ?></dd>
+                </dl>
+            </div>
+            <?php endif; ?>
+        </dd>
+        <?php endforeach; ?>
+    </dl>
+<?php endif;?>
+<?php if ($messages = $this->getMessages()): ?>
+    <?php foreach ($messages as $message): ?>
+        <p class="item-msg <?php echo $message['type'] ?>">* <?php echo $message['text'] ?></p>
+    <?php endforeach; ?>
+<?php endif; ?>
+<?php if ($addtInfoBlock = $this->getProductAdditionalInformationBlock()):?>
+    <?php echo $addtInfoBlock->setItem($_item)->toHtml() ?>
+<?php endif;?>

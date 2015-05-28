@@ -1,0 +1,155 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<div class="page-title" style="margin-bottom: 10px;">
+    <h1 style="margin-bottom: 10px;"><?php echo $this->getRegistrantTitle() ?></h1>
+</div>
+
+<?php echo $this->__('Your Wedding Registry') ?><span class="separator">|</span><a href="<?php echo $this->getEditRegistryUrl() ?>"><?php echo $this->__('Registry Information') ?></a><span class="separator">|</span><a href="<?php echo $this->getTellAboutUrl(); ?>"><?php echo $this->__('Tell About Your Registry') ?></a><span class="separator">|</span><a href="<?php echo $this->getPublicRegistryUrl()?>"><?php echo $this->__('Guest\'s View Of Your Registry') ?></a>
+
+
+<p style="margin: 15px 0;">
+    <span style="font-size: 15px; font-weight: bold;"><?php echo $this->__('Items In Registry:'); ?> <?php echo Mage::helper('webtexweddingregistry')->getItemsCount()?></span>
+    <span style="font-size: 15px; font-weight: bold; margin-left: 20px;"><?php echo $this->__('Items Purchased:'); ?> <?php echo $this->getPurchasedProduct(); ?></span>
+</p>
+
+<p>
+    <b style="margin-right: 3px;"><?php echo $this->__('Sort by:') ?></b>
+    <?php $sort_metod = $this->getRequest()->getParam('sort'); ?>
+    <select id="store_switcher" class="system-config-store-switcher" onchange="location.href=this.options[this.selectedIndex].getAttribute('url')">
+        <option value="default" url="<?php echo $this->getUrl('*/*/*') ?>" <?php if($sort_metod == 'default') echo 'selected="selected"'; ?>>Priority</option>
+        <option value="price-to-high" url="<?php echo $this->getUrl('*/*/*', array('sort' => 'price-to-high')) ?>" <?php if($sort_metod == 'price-to-high') echo 'selected="selected"'; ?>>Price(low to high)</option>
+        <option value="price-to-low" url="<?php echo $this->getUrl('*/*/*', array('sort' => 'price-to-low')) ?>" <?php if($sort_metod == 'price-to-low') echo 'selected="selected"'; ?>>Price(high to low)</option>
+        <option value="purchased" url="<?php echo $this->getUrl('*/*/*', array('sort' => 'purchased')) ?>" <?php if($sort_metod == 'purchased') echo 'selected="selected"'; ?>>Purchased status</option>
+    </select>
+</p>
+
+<?php if($this->getProductsCount()): ?>
+<form action="<?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; echo $this->getUrl('*/*/updateItem', array('_secure'=>$loadFromSSL)) ?>" method="post" class="my-wishlist">
+    <fieldset>
+    <?php echo $this->getBlockHtml('formkey')?>
+    <table class="data-table" id="wishlist-table">
+    <col width="130" />
+    <col width="300" />
+    <col />
+    <col />
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th><?php echo $this->__('Price') ?></th>
+                <th><?php echo $this->__('Desired') ?></th>
+                <th><?php echo $this->__('Received') ?></th>
+                <th class="a-center"><?php echo $this->__('Add To Cart') ?></th>
+                <th><?php echo $this->__('Remove') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        //$this->getSortedProducts();
+         foreach($this->getSortedProducts() as $product): ?>
+            <tr>
+                <td>
+                    <div><a href="<?php echo $product->getProductUrl() ?>"><img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(113, 113); ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" width="113" /></a></div>                                  
+                    
+                </td>
+                <td>
+                    <div style="margin-bottom: 10px;"><a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>"><?php echo $this->htmlEscape($product->getName()) ?></a></div>    
+                    
+                    <!-- item custom options -->
+                        <?php if ($_options = $product->getOptionList()):?>
+                        <dl class="item-options">
+                            <?php foreach ($_options as $_option) : ?>
+                            <?php $_formatedOptionValue = $this->getFormatedOptionValue($_option) ?>
+                            <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+                            <dd<?php if (isset($_formatedOptionValue['full_view'])): ?> class="truncated"<?php endif; ?>><?php echo $_formatedOptionValue['value'] ?>
+                                <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                <div class="truncated_full_value">
+                                    <dl class="item-options">
+                                        <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+                                        <dd><?php echo $_formatedOptionValue['full_view'] ?></dd>
+                                    </dl>
+                                </div>
+                                <?php endif; ?>
+                            </dd>
+                            <?php endforeach; ?>
+                        </dl>
+                        <?php endif;?>
+                    <!-- / -->
+                    
+                    <label><?php echo $this->__('Note'); ?></label>
+                    <textarea name="product[<?php echo $product->getItemId() ?>][description]" rows="3" cols="3" style="width:95%;height:60px;" onfocus="focusComment(this)" onblur="focusComment(this)"><?php echo ( $product->getDescription() ) ? $product->getDescription() : '' ?></textarea>
+                    <label><?php echo $this->__('Priority'); ?></label>
+                    <select size="1" name="product[<?php echo $product->getItemId() ?>][priority]">
+                        <?php echo $this->getPriorityList($product->getPriority()) ?>
+                    </select>
+                </td>
+                <td>
+                    <?php echo $this->helper('checkout')->formatPrice($product->getMPrice()); ?>
+                </td>
+                
+                <td align="center">
+                    <input type="text" name="product[<?php echo $product->getItemId() ?>][desired]" style="width: 20px;" value="<?php echo $product->getDesired() ?>" />
+                </td>
+                <td align="center">
+                    <input type="text" name="product[<?php echo $product->getItemId() ?>][received]" style="width: 20px;" value="<?php echo $product->getReceived() ?>" />
+                </td>
+                <td class="a-center">
+                <?php if($product->getDesired() <= $product->getReceived()): ?>
+                    <?php echo $this->__('Already Purchased'); ?>
+                <?php else : ?>  
+                    <?php if($product->isSaleable()): ?>     
+                        <a href="<?php echo $product->getItemAddToCartUrl() ?>" class="link-cart"><?php echo $this->__('Add to Cart') ?></a><br />
+                    <?php endif; ?>
+                <?php endif; ?>
+                </td>
+                <td>
+                    <a href="<?php echo $product->getItemRemoveUrl() ?>" onclick="return confirmRemoveRegistryItem();" class="link-remove" ><?php echo $this->__('Remove') ?></a>
+                </td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+<script type="text/javascript">decorateTable('wishlist-table')</script>
+    <div class="buttons-set">
+        <button type="submit" class="button" name="do"><span><?php echo $this->__('Save Changes') ?></span></button>
+    </div>
+    <fieldset>
+</form>
+<?php else: ?>
+    <p><?php echo $this->__('You have no items in your Wedding Registry.') ?></p>
+<?php endif ?>
+
+<script type="text/javascript">
+//<![CDATA[
+function confirmRemoveRegistryItem() {
+    return confirm('<?php echo $this->__('Are you sure you want to remove this product from your Wedding Registry?') ?>');
+}
+//]]>
+</script>

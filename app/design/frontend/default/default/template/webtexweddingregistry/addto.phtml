@@ -1,0 +1,109 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+?>
+
+<script type="text/javascript">
+    function ajaxRequest(url, target)
+    {
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        
+        if(productAddToCartForm.validator.validate())
+        { 
+            jQuery('.loading-mask-process').show();
+                        
+            jQuery.post(url, jQuery('#product_addtocart_form').serialize(), function(data){
+            
+                if(data) json = jQuery.parseJSON(data);
+                else json = new Object();
+            
+                if(json.success)
+                {
+                    jQuery('.loading-mask-process').hide();
+                    jQuery('.loading-mask-success').show();
+                    setTimeout(hideLoader, 2000);
+                }
+                else if(!json.success)
+                {  
+                    window.location.href = '<?php echo $this->getUrl('webtexweddingregistry/index/viewItems');?>';
+                }
+                else
+                {
+                    jQuery('.loading-mask-process').hide();
+                    jQuery('.loading-mask-error').show();
+                    setTimeout(hideLoader, 2000);
+                }
+            });
+        }
+    }
+    
+    function hideLoader()
+    {
+        jQuery('.loading-mask-success').fadeOut();
+        jQuery('.loading-mask-error').fadeOut();
+    }
+</script>
+
+<?php $_product = $this->getProduct() ?>
+<ul class="add-to-links">
+<?php if ($this->helper('wishlist')->isAllow()) : ?>
+    <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+<?php endif; ?>
+<?php if($_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product) ): ?>
+    <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+<?php endif; ?>
+
+
+<?php if(Mage::getStoreConfig('webtexweddingregistry_webtexweddingregistry/webtexweddingregistry/switcher') ): ?>
+    <?php if($this->helper('webtexweddingregistry')->isRegistry() ): ?>
+    <li><span class="separator">|</span>
+    <span>
+        <?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; ?>
+        <a href="" onclick="ajaxRequest('<?php echo $this->getUrl('webtexweddingregistry/index/addItem', array('product'=>$_product->getId(), '_secure'=>$loadFromSSL)) ?>', this); return false;"><?php echo $this->__('Add to Wedding Registry') ?></a>
+    </span>
+    </li>
+	<?php endif; ?>
+<?php else: ?>
+	<li><span class="separator">|</span>
+    <span>
+        <?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; ?>
+        <a href="" onclick="ajaxRequest('<?php echo $this->getUrl('webtexweddingregistry/index/addItem', array('product'=>$_product->getId(), '_secure'=>$loadFromSSL)) ?>', this); return false;"><?php echo $this->__('Add to Wedding Registry') ?></a>
+    </span>
+    </li>
+<?php endif; ?>
+</ul>
+
+<div id="loading-mask" class="loading-mask-process" style="display: none; z-index: 1001;">
+    <p class="loader" id="loading_mask_loader"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN); ?>adminhtml/default/default/images/ajax-loader-tr.gif" alt="Loading..." /><br />Please wait...</p>
+</div>
+
+<div id="loading-mask"  class="loading-mask-success" style="display: none;">
+    <p class="loader" id="loading_mask_loader">Added to Wedding Registry</p>
+</div>
+
+<div id="loading-mask"  class="loading-mask-error" style="display: none;">
+    <p class="loader" id="loading_mask_loader">Oops!<br />Error...</p>
+</div>

@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+ -->
+<layout version="1.0.0">
+    <default>
+        <reference name="head">
+            <action method="addJs"><script>webtex/jquery-1.4.2.js</script></action>
+            <action method="addJs"><script>webtex/bubble.js</script></action>
+            <action method="addCss"><stylesheet>css/webtex/bubble.css</stylesheet></action>
+        </reference>
+        <reference name="top.links">
+            <action method="setTemplate"><template>webtexweddingregistry/links.phtml</template></action>
+        </reference>
+   </default>
+	<webtexweddingregistry_index_tellabout>
+        <reference name="head">
+          <action method="addJs"><script>webtex/jquery.cleditor.js</script></action>
+          <action method="addCss"><stylesheet>css/webtex/cleditor.css</stylesheet></action>
+        </reference>
+    </webtexweddingregistry_index_tellabout>
+   <webtexweddingregistry_index_addregistry>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"/>
+            <block type="webtexweddingregistry/addregistry" name="webtexweddingregistry.addregistry" />
+        </reference>
+    </webtexweddingregistry_index_addregistry>
+    
+    <webtexweddingregistry_index_editregistry>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"/>
+            <block type="webtexweddingregistry/editregistry" name="webtexweddingregistry.editregistry" />
+        </reference>
+    </webtexweddingregistry_index_editregistry>
+    
+    <webtexweddingregistry_index_viewitems>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="webtexweddingregistry/viewregistry" name="webtexweddingregistry.viewregistry" />
+        </reference>
+    </webtexweddingregistry_index_viewitems>
+    
+    <webtexweddingregistry_index_registry>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="webtexweddingregistry/registry" name="webtexweddingregistry.registry" />
+        </reference>
+    </webtexweddingregistry_index_registry>
+    
+    <webtexweddingregistry_index_tellabout>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="webtexweddingregistry/tellabout" name="webtexweddingregistry.tellabout" />
+        </reference>
+    </webtexweddingregistry_index_tellabout>
+    
+    <webtexweddingregistry_index_searchregistry>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="webtexweddingregistry/searchregistry" name="webtexweddingregistry.searchregistry" />
+        </reference>
+    </webtexweddingregistry_index_searchregistry>
+    
+    <catalog_category_layered>
+        <reference name="product_list">
+            <action method="setTemplate"><template>webtexweddingregistry/list.phtml</template></action>
+        </reference>
+    </catalog_category_layered>
+    
+    <catalogsearch_advanced_result>
+        <reference name="search_result_list">
+            <action method="setTemplate"><template>webtexweddingregistry/list.phtml</template></action>
+        </reference>
+    </catalogsearch_advanced_result>
+    
+    <catalogsearch_result_index>
+        <reference name="search_result_list">
+            <action method="setTemplate"><template>webtexweddingregistry/list.phtml</template></action>
+        </reference>
+    </catalogsearch_result_index>
+    
+    <catalog_category_default>
+            <reference name="product_list">
+                <action method="setTemplate"><template>webtexweddingregistry/list.phtml</template></action>
+            </reference>
+    </catalog_category_default>
+            
+    <catalog_product_view>
+        <reference name="product.info.addto">
+            <action method="setTemplate"><template>webtexweddingregistry/addto.phtml</template></action>
+        </reference>
+    </catalog_product_view>
+    
+    <customer_account>
+        <reference type="customer/account_navigation" name="customer_account_navigation" before="-" template="customer/account/navigation.phtml">
+                <action method="addLink" translate="label" module="webtexweddingregistry"><name>webtexweddingregistry</name><path>webtexweddingregistry/index/viewItems/</path><label>My Wedding Registry</label></action>
+        </reference>
+    </customer_account>
+    
+    <checkout_cart_index>
+        <reference name="checkout.cart">
+                <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>webtexweddingregistry/cartitemdefault.phtml</template></action>
+                <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>webtexweddingregistry/cartitemdefault.phtml</template></action>
+                <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>webtexweddingregistry/cartitemdefault.phtml</template></action>
+                <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>webtexweddingregistry/cartitemdefault.phtml</template></action>
+        </reference>
+    </checkout_cart_index>
+    
+    <checkout_onepage_index>
+        <reference name="checkout.onepage">
+            <block type="webtexweddingregistry/billing" name="checkout.onepage.billing" as="billing" template="webtexweddingregistry/billing.phtml"/>
+            <block type="webtexweddingregistry/shipping" name="checkout.onepage.shipping" as="shipping" template="webtexweddingregistry/shipping.phtml"/>
+        </reference>
+    </checkout_onepage_index>
+
+    <checkout_multishipping_addresses translate="label">
+        <reference name="content">
+            <remove name="checkout_addresses" />
+            <block type="webtexweddingregistry/addresses" name="webtexweddingregistry_addresses" template="webtexweddingregistry/addresses.phtml">
+                <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>webtexweddingregistry/multycartitemdefault.phtml</template></action>
+                <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>webtexweddingregistry/multycartitemdefault.phtml</template></action>
+                <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>webtexweddingregistry/multycartitemdefault.phtml</template></action>
+                <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>webtexweddingregistry/multycartitemdefault.phtml</template></action>
+            </block>
+        </reference>
+    </checkout_multishipping_addresses>
+
+    <webtexweddingregistry_index_getaddressfields>
+        <remove name="root"/>
+        <block type="webtexweddingregistry/address_add" name="webtexweddingregistry.address.adding" output="toHtml" template="webtexweddingregistry/address/add.phtml"/>
+    </webtexweddingregistry_index_getaddressfields>
+</layout> 

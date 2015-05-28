@@ -1,0 +1,113 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+
+?>
+<?php
+/**
+ * @see Mage_Adminhtml_Block_Sales_Items_Column_Name
+ */
+?>
+
+<?php if ($_item = $this->getItem()): ?>
+    <h5 class="title"><?php echo $this->htmlEscape($_item->getName()) ?></h5>
+    <div><strong><?php echo $this->helper('sales')->__('SKU') ?>:</strong> <?php echo implode('<br />', Mage::helper('catalog')->splitSku($this->htmlEscape($this->getSku()))); ?></div>
+    <?php if ($this->getOrderOptions()): ?>
+        <dl class="item-options">
+        <?php foreach ($this->getOrderOptions() as $_option): ?>
+            <dt><?php echo $_option['label'] ?></dt>
+            <dd>
+            <?php if (isset($_option['custom_view']) && $_option['custom_view']): ?>
+                <?php echo $this->getCustomizedOptionValue($_option); ?>
+            <?php else: ?>
+                <?php echo Mage::helper('core/string')->truncate($_option['value'], 55, '', $_remainder);?>
+                <?php if ($_remainder):?>
+                    ... <span id="<?php echo $_id = 'id' . uniqid()?>"><?php echo $_remainder ?></span>
+                    <script type="text/javascript">
+                    $('<?php echo $_id ?>').hide();
+                    $('<?php echo $_id ?>').up().observe('mouseover', function(){$('<?php echo $_id ?>').show();});
+                    $('<?php echo $_id ?>').up().observe('mouseout',  function(){$('<?php echo $_id ?>').hide();});
+                    </script>
+                <?php endif;?>
+            <?php endif;?>
+            </dd>
+        <?php endforeach; ?>
+        </dl>
+    <?php endif; ?>
+    <?php echo $this->htmlEscape($_item->getDescription()) ?>
+<?php endif; ?>
+<?php 
+		
+		$customOptions = $_item->getProductOptions();
+		
+        if ($customOptions['info_buyRequest']) 
+        {
+            $info_buyRequest = $customOptions['info_buyRequest'];
+                            
+        }
+		
+if(isset($info_buyRequest['webtex_weddingregistry_id'])){
+		unset($info_buyRequest['webtex_weddingregistry_id']);
+        unset($info_buyRequest['webtex_weddingregistry_item_id']);
+		$info_buyRequest = serialize($info_buyRequest);
+
+		$collection = Mage::getModel('webtexweddingregistry/orders')->getCollection()
+                ->addFieldToFilter('product_id', $_item->getProductId())
+                ->addFieldToFilter('order_id', $_item->getOrderId())
+				->addFieldToFilter('params', $info_buyRequest);
+        
+		if($collection->getFirstItem())
+		{
+			$webtex_weddingregistry_id = $collection->getFirstItem()->getWeddingregistryId();
+		}
+		
+		
+        $answer = '';
+        
+        if(isset($webtex_weddingregistry_id) && $webtex_weddingregistry_id)
+        {
+            $registry = Mage::helper('webtexweddingregistry')->getRegistryById($webtex_weddingregistry_id);
+            $_array['firstname'] = $registry->getData('firstname');
+            $_array['lastname'] = $registry->getData('lastname');
+            $_array['cofirstname'] = $registry->getData('co_firstname');
+            $_array['colastname'] = $registry->getData('co_lastname');
+        
+            $url = $this->getUrl('webtexweddingregistry/index/registry', array('id'=>$registry->getData('weddingregistry_id')));
+        
+            $answer = '<a href="'. $url .'">' . $this->__('For') . ' ' . $_array['firstname'] . ' ' . $_array['lastname'];
+        
+            if($_array['cofirstname'] || $_array['colastname'])
+            {
+                $answer .= ' ' . $this->__('And') . ' ';
+                $answer .= $_array['cofirstname'] . ' ' . $_array['colastname'];
+            }
+            
+            $answer .= ' ' . $this->__('Wedding Registry') . '</a>';
+        }
+		
+		echo $answer;
+}
+?>

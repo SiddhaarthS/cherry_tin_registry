@@ -1,0 +1,51 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="page-create-order">
+<script type="text/javascript">order.setCurrencySymbol('<?php echo $this->getCurrencySymbol($this->getCurrentCurrencyCode()) ?>')</script>
+<table cellspacing="0" width="100%">
+<tr>
+    <td style="padding-left: 0px;">
+
+       <div id="order-search" style="" class="order-search-items"><?php echo $this->getChildHtml('search') ?></div>
+        <div id="order-items"><?php echo $this->getChildHtml('items') ?></div>
+        <div id="order-errors"><?php echo $this->getChildHtml('errors') ?></div>
+        <div id="order-form_account"><?php echo $this->getChildHtml('form_account') ?></div>
+        <div id="order-addresses">
+            <div id="order-billing_address" class="box-left"><?php echo $this->getChildHtml('billing_address') ?></div>
+            <div id="order-shipping_address" class="box-right"><?php echo $this->getChildHtml('shipping_address') ?></div>
+        </div>
+        <div class="clear"></div>
+        <div id="order-methods">
+            <div id="order-billing_method" class="box-left payments"><?php echo $this->getChildHtml('billing_method') ?></div>
+            <div id="order-shipping_method" class="box-right"><?php echo $this->getChildHtml('shipping_method') ?></div>
+        </div>
+
+        <div class="clear"></div>
+    </td>
+</tr>
+</table>
+</div>

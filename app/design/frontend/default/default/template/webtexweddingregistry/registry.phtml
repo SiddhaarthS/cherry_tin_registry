@@ -1,0 +1,151 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+?>
+
+<?php if($this->isRegistry()) :?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<div class="page-title" style="margin-bottom: 10px;">
+    <h1><?php echo $this->getRegistrantTitle() ?></h1>
+</div>
+
+<?php if($this->getImage()) : ?>
+<img src="<?php echo $this->getResizeImage() ?>" style="float: right; margin: 0 0 30px 20px;" />
+<?php endif; ?>
+
+<?php if($weddingexparrivdate = $this->getRegistry()->getWeddingExpArrivDate()) : ?>
+<p><b><?php echo $this->__('Wedding Date:'); ?></b> <?php echo  $weddingexparrivdate?></p>
+<?php endif; ?>
+<?php if($eventlocation = $this->getRegistry()->getEventLocation()) : ?>
+<p><b><?php echo $this->__('Wedding Location:'); ?></b> <?php echo $eventlocation ?></p>
+<?php endif; ?>
+<?php if($parentnotes = $this->getRegistry()->getParentNotes()) : ?>
+<p><b><?php echo $this->__('Notes:'); ?></b> <?php echo $parentnotes ?></p>
+<?php endif; ?>
+
+
+<p>
+    <b style="margin-right: 3px;"><?php echo $this->__('Sort by:') ?></b>
+    <?php $sort_metod = $this->getRequest()->getParam('sort'); ?>
+    <select id="store_switcher" class="system-config-store-switcher" onchange="location.href=this.options[this.selectedIndex].getAttribute('url')">
+        <option value="default" url="<?php echo $this->getUrl('*/*/*', array('id' => $this->getRequest()->getParam('id'))) ?>" <?php if($sort_metod == 'default') echo 'selected="selected"'; ?>>Priority</option>
+        <option value="price-to-high" url="<?php echo $this->getUrl('*/*/*', array('sort' => 'price-to-high', 'id' => $this->getRequest()->getParam('id'))) ?>" <?php if($sort_metod == 'price-to-high') echo 'selected="selected"'; ?>>Price(low to high)</option>
+        <option value="price-to-low" url="<?php echo $this->getUrl('*/*/*', array('sort' => 'price-to-low', 'id' => $this->getRequest()->getParam('id'))) ?>" <?php if($sort_metod == 'price-to-low') echo 'selected="selected"'; ?>>Price(high to low)</option>
+        <option value="purchased" url="<?php echo $this->getUrl('*/*/*', array('sort' => 'purchased', 'id' => $this->getRequest()->getParam('id'))) ?>" <?php if($sort_metod == 'purchased') echo 'selected="selected"'; ?>>Purchased status</option>
+    </select>
+</p>
+
+<div style="clear: both;"></div>
+<?php if($this->getProductsCount()): ?>
+<div class="my-wishlist">
+
+    <table class="data-table" id="wishlist-table">
+    <col width="130" />
+    <col width="300" />
+    <col />
+    <col />
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th><?php echo $this->__('Price') ?></th>
+                <th><?php echo $this->__('Desired') ?></th>
+                <th><?php echo $this->__('Received') ?></th>
+                <th class="a-center"><?php echo $this->__('Add To Cart') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach($this->getSortedProducts() as $product): ?>
+            <tr>
+                <td>
+                    <div><a href="<?php echo $product->getProductUrl() ?>"><img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(113, 113); ?>" alt="<?php echo $this->htmlEscape($product->getName()) ?>" width="113" /></a></div>                                  
+                </td>
+                <td>
+                    <div style="margin-bottom: 10px;"><a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>"><?php echo $this->htmlEscape($product->getName()) ?></a></div> 
+                    <?php if($this->getDescription($product)) :?>
+                    <p><b><?php echo $this->__('Note'); ?>:</b> <?php echo $product->getDescription() ?></p>
+                    <?php endif; ?>
+                    <p><b><?php echo $this->__('Priority'); ?>:</b> <?php echo $this->getPriorityList($product->getPriority()) ?></p>
+                    
+                    <p>
+                    
+                    <!-- item custom options -->
+                        <?php if ($_options = $product->getOptionList()):?>
+                        <dl class="item-options">
+                            <?php foreach ($_options as $_option) : ?>
+                            <?php $_formatedOptionValue = $this->getFormatedOptionValue($_option) ?>
+                            <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+                            <dd<?php if (isset($_formatedOptionValue['full_view'])): ?> class="truncated"<?php endif; ?>><?php echo $_formatedOptionValue['value'] ?>
+                                <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                <div class="truncated_full_value">
+                                    <dl class="item-options">
+                                        <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+                                        <dd><?php echo $_formatedOptionValue['full_view'] ?></dd>
+                                    </dl>
+                                </div>
+                                <?php endif; ?>
+                            </dd>
+                            <?php endforeach; ?>
+                        </dl>
+                        <?php endif;?>
+                    <!-- / -->
+                    
+                    </p>
+                </td>
+                <td>
+                    <?php echo $this->helper('checkout')->formatPrice($product->getMPrice()); ?>
+                </td>
+                
+                <td align="center">
+                    <?php echo $product->getDesired() ?>
+                </td>
+                <td align="center">
+                    <?php echo $product->getReceived() ?>
+                </td>
+                <td class="a-center">
+                <?php if($product->getDesired() <= $product->getReceived()):?>
+                    <?php echo $this->__('Already Purchased'); ?>
+                <?php else : ?>  
+                    <?php if($product->isSaleable()): ?>     
+                        <a href="<?php echo $product->getItemAddToCartUrl() ?>" class="link-cart"><?php echo $this->__('Add to Cart') ?></a><br />
+                    <?php endif; ?>
+                <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">decorateTable('wishlist-table')</script>
+
+<?php else: ?>
+    <p><?php echo $this->__('There are no items in this Wedding Registry.') ?></p>
+<?php endif ?>
+
+<?php else :?>
+<p>Sorry! But there are no registry with such id.</p>
+<?php endif;?>

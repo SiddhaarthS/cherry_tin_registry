@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   Webtex
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+ -->
+<config>
+    <modules>
+        <Webtex_WeddingRegistry>
+            <version>1.7.3</version>
+        </Webtex_WeddingRegistry>
+    </modules>
+    <frontend>   
+        <routers>
+            <checkout>
+                <args>
+                    <modules>
+                         <webtexweddingregistry before="Mage_Checkout">Webtex_WeddingRegistry</webtexweddingregistry>
+                    </modules>
+                </args>
+            </checkout>
+            <webtexweddingregistry>
+                <use>standard</use>
+                <args>
+                    <module>Webtex_WeddingRegistry</module>
+                    <frontName>webtexweddingregistry</frontName>
+                </args>
+            </webtexweddingregistry>
+        </routers>
+        <layout>
+            <updates>
+                <webtexweddingregistry>
+                    <file>webtexweddingregistry.xml</file>
+                </webtexweddingregistry>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <MagExt_BabyRegistry>
+                    <files>
+                        <default>Webtex_WeddingRegistry.csv</default>
+                    </files>
+                </MagExt_BabyRegistry>
+            </modules>
+        </translate>
+        <secure_url>
+            <viewitems>/webtexweddingregistry/index/viewItems</viewitems>
+            <addregistry>/webtexweddingregistry/index/addRegistry</addregistry>
+            <editregistry>/webtexweddingregistry/index/editRegistry</editregistry>
+            <cart>/webtexweddingregistry/index/cart</cart>
+        </secure_url>
+    </frontend>
+    <admin>
+        <routers>
+			<webtexweddingregistry_admin>
+				<use>admin</use>
+				<args>
+					<module>Webtex_WeddingRegistry</module>
+					<frontName>webtexweddingregistry_admin</frontName>
+				</args>
+			</webtexweddingregistry_admin>
+        </routers>
+    </admin> 
+	<adminhtml>
+        <layout>
+            <updates>
+                <webtexweddingregistry>
+                    <file>webtexweddingregistry.xml</file>
+                </webtexweddingregistry>
+            </updates>
+        </layout>
+    </adminhtml>
+    <global>
+        <models>
+            <webtexweddingregistry>
+                <class>Webtex_WeddingRegistry_Model</class>
+                <resourceModel>webtexweddingregistry_mysql4</resourceModel>
+            </webtexweddingregistry>
+            <webtexweddingregistry_mysql4>
+                <class>Webtex_WeddingRegistry_Model_Mysql4</class>
+                <entities>
+                    <webtexweddingregistry>
+                        <table>webtexweddingregistry</table>
+                    </webtexweddingregistry>
+                    <item>
+                        <table>webtexweddingregistry_item</table>
+                    </item>
+                    <orders>
+                        <table>webtexweddingregistry_orders</table>
+                    </orders>
+                </entities>
+            </webtexweddingregistry_mysql4>
+        <checkout>
+             <rewrite>
+                <type_multishipping>Webtex_WeddingRegistry_Model_Type_Multishipping</type_multishipping>
+           </rewrite>
+        </checkout>
+        </models>
+        <resources>
+            <webtexweddingregistry_setup>
+                <setup>
+                    <module>Webtex_WeddingRegistry</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </webtexweddingregistry_setup>
+            <webtexweddingregistry_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </webtexweddingregistry_write>
+            <webtexweddingregistry_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </webtexweddingregistry_read>
+        </resources>
+        <template>
+            <email>
+			     <webtexweddingregistry_template translate="label" module="webtexweddingregistry">
+				    <label>Share WeddingRegistry</label>
+				    <file>webtexweddingregistry_template.html</file>
+				    <type>html</type>
+			     </webtexweddingregistry_template>
+            </email>
+	    </template>
+        <blocks>
+            <webtexweddingregistry>
+                <class>Webtex_WeddingRegistry_Block</class>
+            </webtexweddingregistry>
+            <checkout>
+                <rewrite>
+                    <cart_item_renderer>Webtex_WeddingRegistry_Block_Rewrites_CheckoutCartItemRenderer</cart_item_renderer>
+                </rewrite>
+            </checkout>
+            <checkout>
+                <rewrite>
+                    <cart_item_renderer_configurable>Webtex_WeddingRegistry_Block_Rewrites_CheckoutCartItemRendererConfigurable</cart_item_renderer_configurable>
+                </rewrite>
+            </checkout>
+            <checkout>
+                <rewrite>
+                    <cart_item_renderer_grouped>Webtex_WeddingRegistry_Block_Rewrites_CheckoutCartItemRendererGrouped</cart_item_renderer_grouped>
+                </rewrite>
+            </checkout>
+            <bundle>
+                <rewrite>
+                    <checkout_cart_item_renderer>Webtex_WeddingRegistry_Block_Rewrites_BundleCheckoutCartItemRenderer</checkout_cart_item_renderer>
+                </rewrite>
+            </bundle>
+            <page>
+                <rewrite>
+                    <template_links>Webtex_WeddingRegistry_Block_Rewrites_PageTemplateLinks</template_links>
+                </rewrite>
+            </page>
+        </blocks>
+        <helpers>
+            <webtexweddingregistry>
+                <class>Webtex_WeddingRegistry_Helper</class>
+            </webtexweddingregistry>
+        </helpers>
+        
+        <rewrite>
+            <webtexweddingregistry_order_index>
+                <from><![CDATA[#^/admin/sales_order/cancel/#]]></from>
+                <to>/webtexweddingregistry/order/cancel/</to>
+            </webtexweddingregistry_order_index>
+            <webtexweddingregistry_standart_index>
+                <from><![CDATA[#^/paypal/standard/cancel/#]]></from>
+                <to>/webtexweddingregistry/standard/cancel/</to>
+            </webtexweddingregistry_standart_index>
+        </rewrite>
+    </global>
+	
+	<default>
+        <webtexweddingregistry_webtexweddingregistry>
+            <webtexweddingregistry>
+                <switcher>1</switcher>
+                <appid>141084049366777</appid>
+            </webtexweddingregistry>
+        </webtexweddingregistry_webtexweddingregistry>
+    </default>
+</config>

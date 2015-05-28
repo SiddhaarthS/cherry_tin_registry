@@ -1,0 +1,242 @@
+<?php
+/**
+ * Webtex
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.webtexsoftware.com/LICENSE.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@webtexsoftware.com and we will send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension to newer
+ * versions in the future. If you wish to customize the extension for your
+ * needs please refer to http://www.webtexsoftware.com for more information, 
+ * or contact us through this email: info@webtexsoftware.com.
+ *
+ * @category   design_default
+ * @package    Webtex_WeddingRegistry
+ * @copyright  Copyright (c) 2011 Webtex Solutions, LLC (http://www.webtexsoftware.com/)
+ * @license    http://www.webtexsoftware.com/LICENSE.txt End-User License Agreement
+ */
+?>
+<script type="text/javascript">
+    function ajaxRequest(url, target)
+    {
+        jQuery('.loading-mask-process').show();
+        
+        jQuery.post(url, function(data){
+            
+            if(data) json = jQuery.parseJSON(data);
+            else json = new Object();
+            
+            if(json.success)
+            {
+                jQuery('.loading-mask-process').hide();
+                jQuery('.loading-mask-success').show();
+                setTimeout(hideLoader, 2000);
+            }
+            else if(!json.success)
+            {  
+                window.location.href = '<?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; echo $this->getUrl('webtexweddingregistry/index/viewItems', array('_secure'=>$loadFromSSL));?>';
+            }
+            else
+            {
+                jQuery('.loading-mask-process').hide();
+                jQuery('.loading-mask-error').show();
+                setTimeout(hideLoader, 2000);
+            }
+            
+            
+        });
+    }
+    
+    function hideLoader()
+    {
+        jQuery('.loading-mask-success').fadeOut();
+        jQuery('.loading-mask-error').fadeOut();
+    }
+</script>
+
+<?php
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+<div class="category-products">
+    <?php echo $this->getToolbarHtml() ?>
+    <?php // List mode ?>
+    <?php if($this->getMode()!='grid'): ?>
+    <?php $_iterator = 0; ?>
+    <ol class="products-list" id="products-list">
+    <?php foreach ($_productCollection as $_product): ?>
+        <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+            <?php // Product Image ?>
+            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(135); ?>" width="135" height="135" alt="<?php echo $this->htmlEscape($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+            <?php // Product description ?>
+            <div class="product-shop">
+                <div class="f-fix">
+                    <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                    <?php if($_product->getRatingSummary()): ?>
+                    <?php echo $this->getReviewsSummaryHtml($_product) ?>
+                    <?php endif; ?>
+                    <?php echo $this->getPriceHtml($_product, true) ?>
+                    <?php if($_product->isSaleable()): ?>
+                        <p><button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></p>
+                    <?php else: ?>
+                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                    <div class="desc std">
+                        <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_product->getName(), null, true) ?>" class="link-more"><?php echo $this->__('Learn More') ?></a>
+                    </div>
+                    <ul class="add-to-links">
+                        <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                            <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                        <?php endif; ?>
+                        <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                            <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                        <?php endif; ?>
+                        
+                        
+                        <?php if(Mage::getStoreConfig('webtexweddingregistry_webtexweddingregistry/webtexweddingregistry/switcher') ): ?>
+							<?php if($this->helper('webtexweddingregistry')->isRegistry() ): ?>
+                            <li><span class="separator">|</span>
+                            <span>
+                                <?php if ($_product->getTypeInstance(true)->hasRequiredOptions($_product) || $_product->grtTypeId() == 'grouped'):
+                                    $url = $_product->getProductUrl();
+                                    $link = (strpos($url, '?') !== false) ? '&' : '?';
+                                    $webtexUrl = $url . $link . 'options=cart';
+                                ?>
+                                    <a href="<?php echo $webtexUrl; ?>" class="link-compare"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php else: ?>
+                                    <?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; ?>
+                                    <a href="" class="link-compare" onclick="ajaxRequest('<?php echo $this->getUrl('webtexweddingregistry/index/addItem', array('product'=>$_product->getId(), '_secure'=>$loadFromSSL)) ?>', this); return false;"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php endif; ?>
+                            </span></li>  
+							<?php endif; ?>
+						<?php else: ?>
+							<li><span class="separator">|</span>
+                            <span>
+                                <?php if ($_product->getTypeInstance(true)->hasRequiredOptions($_product) || $_product->getTypeId() == 'grouped'):
+                                    $url = $_product->getProductUrl();
+                                    $link = (strpos($url, '?') !== false) ? '&' : '?';
+                                    $webtexUrl = $url . $link . 'options=cart';
+                                ?>
+                                    <a href="<?php echo $webtexUrl; ?>" class="link-compare"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php else: ?>
+                                    <?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; ?>
+                                    <a href="" class="link-compare" onclick="ajaxRequest('<?php echo $this->getUrl('webtexweddingregistry/index/addItem', array('product'=>$_product->getId(), '_secure'=>$loadFromSSL)) ?>', this); return false;"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php endif; ?>
+                            </span></li> 
+						<?php endif; ?>
+                                
+                    </ul>
+                </div>
+            </div>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+
+    <?php else: ?>
+
+    <?php // Grid Mode ?>
+
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php $_columnCount = $this->getColumnCount(); ?>
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+        <?php if ($i++%$_columnCount==0): ?>
+        <ul class="products-grid">
+        <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(135); ?>" width="135" height="135" alt="<?php echo $this->htmlEscape($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+                <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                <?php if($_product->getRatingSummary()): ?>
+                <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                <?php endif; ?>
+                <?php echo $this->getPriceHtml($_product, true) ?>
+                <div class="actions">
+                    <?php if($_product->isSaleable()): ?>
+                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                    <?php else: ?>
+                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                    <ul class="add-to-links">
+                        <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                            <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                        <?php endif; ?>
+                        <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                            <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                        <?php endif; ?>
+                        
+                        
+                        <?php if(Mage::getStoreConfig('webtexweddingregistry_webtexweddingregistry/webtexweddingregistry/switcher') ): ?>
+							<?php if($this->helper('webtexweddingregistry')->isRegistry() ): ?>
+                            <li><span class="separator">|</span>
+                            <span>
+                                <?php if ($_product->getTypeInstance(true)->hasRequiredOptions($_product) || $_product->getTypeId() == 'grouped'):
+                                    $url = $_product->getProductUrl();
+                                    $link = (strpos($url, '?') !== false) ? '&' : '?';
+                                    $webtexUrl = $url . $link . 'options=cart';
+                                ?>
+                                    <a href="<?php echo $webtexUrl; ?>" class="link-compare"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php else: ?>
+                                    <?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; ?>
+                                    <a href="" class="link-compare" onclick="ajaxRequest('<?php echo $this->getUrl('webtexweddingregistry/index/addItem', array('product'=>$_product->getId(), '_secure'=>$loadFromSSL)) ?>', this); return false;"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php endif; ?>
+                            </span></li>  
+							<?php endif; ?>
+						<?php else: ?>
+							<li><span class="separator">|</span>
+                            <span>
+                                <?php if ($_product->getTypeInstance(true)->hasRequiredOptions($_product) || $_product->getTypeId() == 'grouped'):
+                                    $url = $_product->getProductUrl();
+                                    $link = (strpos($url, '?') !== false) ? '&' : '?';
+                                    $webtexUrl = $url . $link . 'options=cart';
+                                ?>
+                                    <a href="<?php echo $webtexUrl; ?>" class="link-compare"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php else: ?>
+                                    <?php $loadFromSSL = $_SERVER['SERVER_PORT']==443?true:false; ?>
+                                    <a href="" class="link-compare" onclick="ajaxRequest('<?php echo $this->getUrl('webtexweddingregistry/index/addItem', array('product'=>$_product->getId(), '_secure'=>$loadFromSSL)) ?>', this); return false;"><?php echo $this->__('Add to Wedding Registry') ?></a>
+                                <?php endif; ?>
+                            </span></li>  
+						<?php endif; ?>
+                         
+                    </ul>
+                </div>
+            </li>
+        <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+        </ul>
+        <?php endif ?>
+        <?php endforeach ?>
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+
+    <div class="toolbar-bottom">
+        <?php echo $this->getToolbarHtml() ?>
+    </div>
+</div>
+<?php endif; ?>
+
+
+
+
+<div id="loading-mask" class="loading-mask-process" style="display: none; z-index: 1001;">
+    <p class="loader" id="loading_mask_loader"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN); ?>adminhtml/default/default/images/ajax-loader-tr.gif" alt="Loading..." /><br />Please wait...</p>
+</div>
+
+<div id="loading-mask"  class="loading-mask-success" style="display: none;">
+    <p class="loader" id="loading_mask_loader">Added to Wedding Registry</p>
+</div>
+
+<div id="loading-mask"  class="loading-mask-error" style="display: none;">
+    <p class="loader" id="loading_mask_loader">Oops!<br />Error...</p>
+</div>
